@@ -1,6 +1,6 @@
 ﻿<?php
 
-function request($url){
+function httprequest($url){
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url ); // отправляем на
@@ -33,13 +33,9 @@ function request($url){
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
 
-	define('_DB_LOGIN_',  	"root");
-	define('_DB_PASSWORD_', '');
-	define('_DB_DATABASE_', 'task');
-
-	define('_DB_TABLE_',	'tab');
+	require_once 'config.php';
+	require_once 'lib/safemysql.class.php';
 	
-	require_once 'safemysql.class.php';
 
 	$opts = array(
 			'user'    => _DB_LOGIN_,
@@ -49,24 +45,54 @@ function request($url){
 	);
 	$db = new SafeMySQL($opts); // with some of the default settings overwritten
 
-	if(isset($_GET['text_in'])){
 
-		$text_in=$_GET['text_in'];
-		$sql  = "INSERT INTO "._DB_TABLE_." SET dt_ins=?s, ts_ins=?i, text_in=?s";
-			$db->query($sql, date('Y-m-d H:i:s'), time(), $text_in);
+	if(isset($_GET['provider_id'])){
+		require_once 'lib/Providers.class.php';
+		$provider = new Providers($db, _DB_TABLE_PROVIDER_); 
+
+		$provider_id=intval($_GET['provider_id']);		
+		$url=$provider->GetUrl($provider_id);
+
+		if ($url==false){
+			die ('Error: provider unknown');
+		}
+	}else{
+		die ('Error: need provider id');
+	}
+
+
+	if(isset($_GET['token'])){
+
+		require_once 'lib/Users.class.php';
+		$user = new Users($db, _DB_TABLE_USER_); 
+
+		$token=intval($_GET['token']);		
+		$user_id=$user->GetUserId($token);
+
+		if ($user_id==false){
+			die ('Error: user unknown');
+		}
+	}else{
+		die ('Error: need user token');
+	}
+
+	if(isset($_GET['text'])){
+
+		$text_in=$_GET['text'];
+
+		require_once 'lib/Request.class.php';
+		$request = new Request($db, _DB_TABLE_REQUEST_, $provider_id, $user_id); 
 
 		echo 'input_data:'.$text_in.'<br>';
+		$request->InsertInputData($text_in);
 
-		$last_id=$db->insertId();
-
-		$text_get=request('https://functions.yandexcloud.net/d4e8sb6mvsuognj3jv94?text='.rawurlencode($text_in));
-		$sql  = "UPDATE "._DB_TABLE_." SET text_get=?s WHERE id=?i";
-			$db->query($sql,$text_get,$last_id);
-
+		$text_get=httprequest($url . rawurlencode($text_in));
+		
 		echo 'get_data:'.$text_get.'<br>';
+		$request->SaveRequestData($text_get);
 		
 	}else{
-		echo "no data";
+		die ('Error: text is empty');
 	}
 
 
