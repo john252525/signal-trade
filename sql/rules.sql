@@ -24,30 +24,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `providers`
+-- Структура таблицы `rules`
 --
 
-CREATE TABLE `providers` (
+CREATE TABLE `rules` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `url` varchar(255) NOT NULL
+  `provider_id` int(11) NOT NULL,
+  `rule_text` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Дамп данных таблицы `providers`
+-- Дамп данных таблицы `rules`
 --
 
-INSERT INTO `providers` (`id`, `name`, `url`) VALUES
-(1, '@daytrader_signals', 'https://functions.yandexcloud.net/d4e8sb6mvsuognj3jv94?text=');
+INSERT INTO `rules` (`id`, `provider_id`, `rule_text`) VALUES
+(1, 1, '{\n    \"stock\":\"binance_spot\",\n    \"qty\":\"20\",\n    \"takeprofit_volume\":[70,30],\n    \"long\":{\n    		\"stoploss\":\"price*0.99\",\n        	\"takeprofit\":[\"price*((price/stoploss-1)*2+1)\",\"price*((price/stoploss-1)*3+1)\"]\n    		}\n           ,\n    \"short\":{\n	        \"stoploss\":\"price*1.01\",\n    	    \"takeprofit\":[\"price*(stoploss/price-1)*2\",\"price*(stoploss/price-1)*3\"]\n           }\n}');
 
 --
 -- Индексы сохранённых таблиц
 --
 
 --
--- Индексы таблицы `providers`
+-- Индексы таблицы `rules`
 --
-ALTER TABLE `providers`
+ALTER TABLE `rules`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -55,9 +55,9 @@ ALTER TABLE `providers`
 --
 
 --
--- AUTO_INCREMENT для таблицы `providers`
+-- AUTO_INCREMENT для таблицы `rules`
 --
-ALTER TABLE `providers`
+ALTER TABLE `rules`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 

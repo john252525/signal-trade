@@ -34,7 +34,7 @@ function httprequest($url){
 	error_reporting(E_ALL);
 
 	require_once 'config.php';
-	require_once 'lib/safemysql.class.php';
+	require_once 'lib/db/safemysql.class.php';
 	
 
 	$opts = array(
@@ -79,17 +79,48 @@ function httprequest($url){
 	if(isset($_GET['text'])){
 
 		$text_in=$_GET['text'];
+		// $text_in='LONG #SOLUSDT from $24.83 stop loss $24.73';
 
-		require_once 'lib/Request.class.php';
-		$request = new Request($db, _DB_TABLE_REQUEST_, $provider_id, $user_id); 
+		require_once 'lib/Presignal.class.php';
+		$presignal = new Presignal($db); 
 
 		echo 'input_data:'.$text_in.'<br>';
-		$request->InsertInputData($text_in);
 
+		// Сохранить вводный пресигнал от бота
+		$presignal_id=$presignal->SavePresignal($text_in, $provider_id, $user_id, _DB_TABLE_PRESIGNAL_);
+
+		// Получить расшифровку из облака
 		$text_get=httprequest($url . rawurlencode($text_in));
-		
 		echo 'get_data:'.$text_get.'<br>';
-		$request->SaveRequestData($text_get);
+
+		// Сохранить расшифровку в БД в строку с пресигналом от бота
+		$presignal->UpdatePresignal($text_get, $presignal_id, _DB_TABLE_PRESIGNAL_);
+
+		require_once 'lib/Signal.class.php';
+		$signal = new Signal($db); 
+
+		// Добавить в расшифровку недостающие данные (takeprofit, stoploss и пр.)
+		// Кол-во готовых сигналов зависит от кол-ва правил постащика
+		$fullsignals=$signal->CalculateSignals($text_get, $provider_id, _DB_TABLE_RULE_);
+		echo "<hr><pre>"; print_r($fullsignals); echo "</pre>"; 
+
+		require_once 'lib/Order.class.php';
+		$order = new Order($db); 
+
+		foreach ($fullsignals as $rule_id => $fullsignal) {
+			// Сохранить сигнал в БД
+			$signal_id=$signal->SaveSignal($fullsignal, $presignal_id, $rule_id, _DB_TABLE_SIGNAL_);	
+
+			// Создать ордера (1 на покупку/продажу и несколько на продажу/покупку)
+			$orders=$order->CalcOrder($fullsignal);
+			foreach ($orders as $orderdata) {			
+				// Сохранить ордер в БД
+				$order->SaveOrder($orderdata, $signal_id, _DB_TABLE_ORDER_);	
+				echo "<hr><pre>"; print_r($orderdata); echo "</pre>"; 
+			}
+		}
+
+
 		
 	}else{
 		die ('Error: text is empty');
