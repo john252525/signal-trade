@@ -17,12 +17,12 @@ class Providers
 	// 	return ($cnt>0) ? true : false;
 	// }
 
-	public function GetUrl($provider_id){
+	public function GetUrl($provider_name){
 		
-		$sql  = 'SELECT url FROM ' . $this->table . ' WHERE id=?i';		
-    	$url = $this->db->getOne($sql, $provider_id);
-		
-		return $url;
+		$sql  = 'SELECT * FROM ' . $this->table . ' WHERE name=?s';		
+    	$data = $this->db->getAll($sql, $provider_name);
+
+		return $data;
 	}
 
 
