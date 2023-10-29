@@ -3,7 +3,7 @@
   //define('_DB_LOGIN_',  	'');
   //define('_DB_PASSWORD_', '');
   //define('_DB_DATABASE_', 'task');
-    require_once '.env.signal-trade';
+    require_once '../.env.signal-trade';
 
 	define('_DB_TABLE_PROVIDER_', 'providers');
 	define('_DB_TABLE_USER_', 	  'users');
