@@ -123,6 +123,27 @@ function httprequest($url){
 				$order->SaveOrder( $orderdata, $signal_id, _DB_TABLE_ORDER_ );	
 				echo "<hr><pre>"; print_r($orderdata); echo "</pre>"; 
 			}
+
+
+
+
+		  //print_r($orders);
+			$url = _URL_ . '&action=create&stock=binance_spot';
+			$params = array(
+				'json' => json_encode($orders),
+			);
+			$result = file_get_contents($url, false, stream_context_create(array(
+				'http' => array(
+					'method'  => 'POST',
+					'header'  => 'Content-type: application/x-www-form-urlencoded',
+					'content' => http_build_query($params)
+				)
+			)));
+			echo $result;
+
+
+
+
 		}
 
 
