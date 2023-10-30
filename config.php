@@ -2,7 +2,7 @@
 
   //define('_DB_LOGIN_',  	'');
   //define('_DB_PASSWORD_', '');
-  //define('_DB_DATABASE_', 'task');
+  //define('_DB_DATABASE_', '');
   //define('_URL_',         '');
     require_once '../.env.signal-trade';
 
