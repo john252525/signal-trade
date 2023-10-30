@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.6.12-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: task
+-- Host: localhost    Database: signal-trade
 -- ------------------------------------------------------
 -- Server version	10.6.12-MariaDB-0ubuntu0.22.04.1
 
@@ -16,12 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `orders`
+-- Table structure for table `order`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `orders` (
+CREATE TABLE `order` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `signal_id` int(11) unsigned NOT NULL DEFAULT 0,
   `dt_ins` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -56,12 +56,12 @@ CREATE TABLE `presignal` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `providers`
+-- Table structure for table `provider`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `providers` (
+CREATE TABLE `provider` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL DEFAULT '',
   `url` varchar(250) NOT NULL DEFAULT '',
@@ -70,12 +70,12 @@ CREATE TABLE `providers` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `rules`
+-- Table structure for table `rule`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `rules` (
+CREATE TABLE `rule` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `provider_id` int(11) unsigned NOT NULL DEFAULT 0,
   `rule_text` longtext NOT NULL DEFAULT '',
@@ -84,12 +84,12 @@ CREATE TABLE `rules` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `signals`
+-- Table structure for table `signal`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `signals` (
+CREATE TABLE `signal` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `presignal_id` int(11) unsigned NOT NULL DEFAULT 0,
   `rule_id` int(11) unsigned NOT NULL DEFAULT 0,
@@ -101,12 +101,12 @@ CREATE TABLE `signals` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `users`
+-- Table structure for table `user`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
+CREATE TABLE `user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL DEFAULT '',
   `token` varchar(250) NOT NULL DEFAULT '',
@@ -123,4 +123,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-30 12:51:41
+-- Dump completed on 2023-10-30 13:04:44

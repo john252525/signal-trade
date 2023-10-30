@@ -6,10 +6,10 @@
   //define('_URL_',         '');
     require_once '../.env.signal-trade';
 
-	define('_DB_TABLE_PROVIDER_', 'providers');
-	define('_DB_TABLE_USER_', 	  'users');
+	define('_DB_TABLE_PROVIDER_', 'provider');
+	define('_DB_TABLE_USER_', 	  'user');
 
 	define('_DB_TABLE_PRESIGNAL_', 'presignal');
-	define('_DB_TABLE_SIGNAL_',    'signals');
-	define('_DB_TABLE_RULE_',      'rules');
-	define('_DB_TABLE_ORDER_',     'orders');
+	define('_DB_TABLE_SIGNAL_',    'signal');
+	define('_DB_TABLE_RULE_',      'rule');
+	define('_DB_TABLE_ORDER_',     'order');
