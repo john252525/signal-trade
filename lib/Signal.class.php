@@ -12,9 +12,10 @@ class Signal
 	// Сохранить сигнал в БД
 	//---------------------------------------
 	public function SaveSignal($data, $presignal_id, $rule_id, $table){
-		$sql  = 'INSERT INTO ' . $table . ' SET presignal_id=?i, rule_id=?i, dt_ins=?s, ts_ins=?i, data=?s';
+		$sql  = 'INSERT INTO ?n SET presignal_id=?i, rule_id=?i, dt_ins=?s, ts_ins=?i, data=?s';
 
-		$this->db->query($sql, 
+		$this->db->query($sql,
+		                        $table,
 								$presignal_id, 
 								$rule_id, 
 								date('Y-m-d H:i:s'), time(), 
@@ -101,8 +102,8 @@ class Signal
     	$presignal=json_decode($text_get, true);
     	echo "<pre>"; print_r($presignal); echo "</pre>"; 
 
-		$sql  = 'SELECT id, rule_text FROM ' . $table . ' WHERE provider_id=?i';
-		$rules = $this->db->getAll($sql, $provider_id);
+		$sql  = 'SELECT id, rule_text FROM ?n WHERE provider_id=?i';
+		$rules = $this->db->getAll($sql, $table, $provider_id);
 
 		$result=array();
 		foreach ($rules as $rule) {
@@ -116,4 +117,3 @@ class Signal
     }
 
 }
-?>

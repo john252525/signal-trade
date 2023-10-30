@@ -12,9 +12,10 @@ class Order
 	// Сохранить ордер в БД
 	//---------------------------------------
 	public function SaveOrder($order, $signal_id, $table){
-		$sql  = 'INSERT INTO ' . $table . ' SET signal_id=?i, dt_ins=?s, ts_ins=?i, stock=?s, type=?s, side=?s, data=?s';
+		$sql  = 'INSERT INTO ?n SET signal_id=?i, dt_ins=?s, ts_ins=?i, stock=?s, type=?s, side=?s, data=?s';
 		
 		$this->db->query($sql, 
+		                        $table,
 								$signal_id,
 								date('Y-m-d H:i:s'), time(),
 								$order['stock'],
@@ -97,4 +98,3 @@ class Order
 
 
 }
-?>
