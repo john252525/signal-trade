@@ -89,14 +89,14 @@ function httprequest($url){
 		require_once 'lib/Presignal.class.php';
 		$presignal = new Presignal($db); 
 
-		echo 'input_data:'.$text_in.'<br>';
+		echo 'input_data:<br>'.$text_in.'<br>';
 
 		// Сохранить вводный пресигнал от бота
 		$presignal_id=$presignal->SavePresignal ( $text_in, $provider_id, $user_id, _DB_TABLE_PRESIGNAL_ );
 
 		// Получить расшифровку из облака
 		$text_get=httprequest( $provider_url . rawurlencode($text_in) );
-		echo 'get_data:'.$text_get.'<br>';
+		echo '<hr>get_data:<br>'.$text_get.'<br>';
 
 		// Сохранить расшифровку в БД в строку с пресигналом от бота
 		$presignal->UpdatePresignal( $text_get, $presignal_id, _DB_TABLE_PRESIGNAL_ );
@@ -106,8 +106,8 @@ function httprequest($url){
 
 		// Добавить в расшифровку недостающие данные (takeprofit, stoploss и пр.)
 		// Кол-во готовых сигналов зависит от кол-ва правил постащика
-		$fullsignals=$signal->CalculateSignals( $text_get, $provider_id, _DB_TABLE_RULE_ );
-		echo "<hr><pre>"; print_r($fullsignals); echo "</pre>"; 
+		$fullsignals=$signal->CalculateSignals( $text_get, $provider_id, _DB_TABLE_RULE_ );  //// echo, print_r inside
+		echo "<hr>fullsignals:<pre>"; print_r($fullsignals); echo "</pre>"; 
 
 		require_once 'lib/Order.class.php';
 		$order = new Order($db); 
@@ -121,7 +121,7 @@ function httprequest($url){
 			foreach ($orders as $orderdata) {			
 				// Сохранить ордер в БД
 				$order->SaveOrder( $orderdata, $signal_id, _DB_TABLE_ORDER_ );	
-				echo "<hr><pre>"; print_r($orderdata); echo "</pre>"; 
+				echo "<hr>order:<pre>"; print_r($orderdata); echo "</pre>"; 
 			}
 
 

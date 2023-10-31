@@ -100,7 +100,7 @@ class Signal
 	public function CalculateSignals($text_get, $provider_id, $table){
 
     	$presignal=json_decode($text_get, true);
-    	echo "<pre>"; print_r($presignal); echo "</pre>"; 
+    	echo "<hr>presignal<pre>"; print_r($presignal); echo "</pre>"; 
 
 		$sql  = 'SELECT id, rule_text FROM ?n WHERE provider_id=?i';
 		$rules = $this->db->getAll($sql, $table, $provider_id);
@@ -108,7 +108,7 @@ class Signal
 		$result=array();
 		foreach ($rules as $rule) {
 	    	$rule_array=json_decode($rule['rule_text'], true);
-	    	echo "<pre>"; print_r($rule_array); echo "</pre>";
+	    	echo "<hr>rule<pre>"; print_r($rule_array); echo "</pre>";
 
 	    	$result[ $rule['id'] ]=$this->CalcSignal($presignal, $rule_array);
 		}
