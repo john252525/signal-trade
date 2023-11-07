@@ -11,16 +11,17 @@ class Order
 	//---------------------------------------
 	// Сохранить ордер в БД
 	//---------------------------------------
-	public function SaveOrder($order, $signal_id, $table){
-		$sql  = 'INSERT INTO ?n SET signal_id=?i, dt_ins=?s, ts_ins=?i, stock=?s, type=?s, side=?s, data=?s';
+	public function SaveOrder($order, $signal_id){
+		$sql  = 'INSERT INTO `' . _DB_TABLE_ORDER_ . '` SET signal_id=?i, dt_ins=?s, ts_ins=?i, stock=?s, type=?s, side=?s, positionSide=?s, pair=?s, data=?s';
 		
 		$this->db->query($sql, 
-		                        $table,
 								$signal_id,
 								date('Y-m-d H:i:s'), time(),
 								$order['stock'],
 								$order['type'],
 								$order['side'],
+								$order['positionSide'],
+								$order['pair'],
 								json_encode($order['data'])
 						);
 
@@ -29,12 +30,15 @@ class Order
 	//--------------------------------------------------------
 	// Создать готовый ордер на основе вводных данных
 	//--------------------------------------------------------
-	private function GenOrder($stock, $type, $side, $qty, $price, $stoploss=NULL){
+	private function GenOrder($stock, $type, $side, $positionSide, $pair, $qty, $price, $stoploss=NULL){
+
 		$result= array(
 
-						'stock' => $stock, 	//binance_spot
-						'type' => $type,	//(limit/oco)
-						'side' => $side,	//(buy/sell)
+						'stock' 		=> $stock, 			//(binance_spot)
+						'type' 			=> $type,			//(limit/oco)
+						'side' 			=> $side,			//(buy/sell)
+						'positionSide' 	=> $positionSide,	//(long/short)
+						'pair'			=> $pair,			//(btc_usdt)
 						'data' => array(
 											'qty' => $qty, 
 											'price' => $price
@@ -72,6 +76,9 @@ class Order
 										$signal['stock'],
 										'limit',
 										$side,
+										$signal['positionSide'],
+										$signal['pair'],
+
 										$signal['qty'],
 										$signal['price']
 								);
@@ -84,6 +91,9 @@ class Order
 										$signal['stock'],
 										'oco',
 										$inverted_side,
+										$signal['positionSide'],
+										$signal['pair'],
+
 										$signal['takeprofit' . $key.'_volume'],
 										$signal['takeprofit' . $key],
 										$signal['stoploss']	

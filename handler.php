@@ -84,7 +84,8 @@ function httprequest($url){
 	if ( (isset($_GET['text'])) && (trim($_GET['text'])!='') ){
 
 		$text_in=$_GET['text'];
-		// $text_in='LONG #SOLUSDT from $24.83 stop loss $24.73';
+
+		if ($text_in=='test') $text_in='LONG #SOLUSDT from $24.83 stop loss $24.73';
 
 		require_once 'lib/Presignal.class.php';
 		$presignal = new Presignal($db); 
@@ -120,7 +121,7 @@ function httprequest($url){
 			$orders=$order->CalcOrder($fullsignal);
 			foreach ($orders as $orderdata) {			
 				// Сохранить ордер в БД
-				$order->SaveOrder( $orderdata, $signal_id, _DB_TABLE_ORDER_ );	
+				$order->SaveOrder( $orderdata, $signal_id );	
 				echo "<hr>order:<pre>"; print_r($orderdata); echo "</pre>"; 
 			}
 
