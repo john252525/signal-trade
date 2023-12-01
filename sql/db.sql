@@ -33,6 +33,7 @@ CREATE TABLE `order` (
   `positionSide` varchar(250) NOT NULL DEFAULT '',
   `pair` varchar(250) NOT NULL DEFAULT '',
   `data` longtext NOT NULL DEFAULT '',
+  `cryptogate_preorder_id` int(11) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -96,6 +97,7 @@ CREATE TABLE `signal` (
   `dt_ins` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ts_ins` int(11) unsigned NOT NULL DEFAULT 0,
   `data` longtext NOT NULL DEFAULT '',
+  `cryptogate_deal_id` int(11) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

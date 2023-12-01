@@ -4,7 +4,7 @@
   //define('_DB_PASSWORD_', '');
   //define('_DB_DATABASE_', '');
   //define('_URL_',         '');
-    require_once '../.env.signal-trade';
+    require_once __DIR__ . '/../.env.signal-trade.php';
 
 	define('_DB_TABLE_PROVIDER_', 'provider');
 	define('_DB_TABLE_USER_', 	  'user');
