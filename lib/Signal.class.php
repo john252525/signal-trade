@@ -63,14 +63,15 @@ class Signal
 		try {
 
 			$presignal['stock'] = $rule_array['stock'];
-			$presignal['qty'] = $rule_array['qty'];
+			if(empty($presignal['qty'])) $presignal['qty'] = $rule_array['qty'];
 
-			$positionSide = $presignal['positionSide'];
-			switch ($positionSide) {
+			
+			$positionSide = @trim($presignal['positionSide']);
+			if(!empty($positionSide)) switch ($positionSide) {
 				case 'long':
 				case 'short':
 
-					if (!isset($presignal['stoploss'])) {
+					if(empty($presignal['stoploss'])  &&  !empty($rule_array[$positionSide]['stoploss'])){
 
 						$expression = $rule_array[$positionSide]['stoploss'];
 						$se = new SimpleExpression($expression);
@@ -85,7 +86,7 @@ class Signal
 
 					if (!isset($rule_array[$positionSide]['takeprofit1'])) {
 
-						foreach ($rule_array[$positionSide]['takeprofit'] as $take_num => $take_rule) {
+						if(!empty($rule_array[$positionSide]['takeprofit'])) foreach($rule_array[$positionSide]['takeprofit'] as $take_num => $take_rule){
 							$expression = $take_rule;
 							$se = new SimpleExpression($expression);
 							$vars = [];
@@ -95,8 +96,8 @@ class Signal
 							$presignal['takeprofit' . ($take_num + 1)] = $takeprofit;
 							unset($se);
 
-							$takeprofit_volume = ($rule_array['qty'] / 100 * $rule_array['takeprofit_volume'][$take_num]);
-							$presignal['takeprofit' . ($take_num + 1) . '_volume'] = $takeprofit_volume;
+						  //$takeprofit_volume = ($rule_array['qty'] / 100 * $rule_array['takeprofit_volume'][$take_num]);
+						  //$presignal['takeprofit' . ($take_num + 1) . '_volume'] = $takeprofit_volume;
 						}
 
 					}
@@ -104,8 +105,7 @@ class Signal
 					break;
 
 				default:
-					die('wrong positionSide');
-					break;
+					exit('wrong positionSide');
 			}
 
 
@@ -115,6 +115,32 @@ class Signal
 			print $expression . PHP_EOL;
 			print str_repeat(' ', $e->getPosition()) . '^' . PHP_EOL;
 		}
+
+
+
+
+		$cnt_takeprofit = 0;
+		foreach($presignal as $k=>$v){
+			if(substr($k, 0, 10) == 'takeprofit') $cnt_takeprofit++;
+		}
+
+		if(empty($rule_array['takeprofit_volume']) || !is_array($rule_array['takeprofit_volume'])){
+			$tmp = round(100 / $cnt_takeprofit, 0);
+			$tmp2 = [];
+			for($i = 1; $i <= $cnt_takeprofit; $i++){
+			    if($i == $cnt_takeprofit){ $tmp2[] = 100 - array_sum($tmp2); break; }
+				$tmp2[] = $tmp;
+			}
+			$rule_array['takeprofit_volume'] = $tmp2;
+		}
+
+		$tp_vol = [];  // takeprofit_volume
+		for($i = 0; $i < $cnt_takeprofit; $i++){
+			if(empty($rule_array['takeprofit_volume'][$i])) break;
+		    $tp_vol[] = $presignal['takeprofit' . ($i + 1) . '_volume'] = ($presignal['qty'] / 100 * $rule_array['takeprofit_volume'][$i]);
+		}
+
+
 
 
 		return $presignal;

@@ -45,7 +45,7 @@ $opts = array(
 	'user' => _DB_LOGIN_,
 	'pass' => _DB_PASSWORD_,
 	'db' => _DB_DATABASE_,
-	'charset' => 'utf8'
+	'charset' => 'utf8mb4'
 );
 $db = new SafeMySQL($opts); // with some of the default settings overwritten
 
@@ -101,7 +101,7 @@ if ((isset($_GET['text'])) && (trim($_GET['text']) != '')) {
 	$presignal_id = $presignal->SavePresignal($text_in, $provider_id, $user_id, _DB_TABLE_PRESIGNAL_);
 
 	// Получить расшифровку из облака
-	$text_get = httprequest($provider_url . rawurlencode($text_in));
+	$text_get = !empty($provider_url) ? httprequest($provider_url . rawurlencode($text_in)) : $text_in;
 	echo '<hr>get_data:<br>' . $text_get . '<br>';
 
 	// Сохранить расшифровку в БД в строку с пресигналом от бота
